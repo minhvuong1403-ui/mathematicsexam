@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Kiểm Tra 20 Phút ĐGTX 1 HKI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            svg: { fontCache: 'global' }
+        };
+        
+        // ĐIỀN LINK GOOGLE APPS SCRIPT CỦA THẦY VÀO ĐÂY:
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzvzYdeD1W4nwhnMwKFYAqG1tely1nmYGNbIgcwcHRFtiPT_0rBnYf20qZXopCXmnpJow/exec";
+
+        function checkExamTime() {
+            const startTime = new Date("2026-10-10T23:50:00+07:00").getTime();
+            const endTime = new Date("2026-10-25T23:59:59+07:00").getTime();
+            const now = new Date().getTime();
+            if (now < startTime) { alert("⏳ Hệ thống chưa mở! Kỳ thi sẽ chính thức bắt đầu vào lúc 23:50 ngày 10/10/2026."); return; }
+            if (now > endTime) { alert("⏳ Hệ thống đã đóng! Kỳ thi đã kết thúc vào lúc 23:59 ngày 25/10/2026."); return; }
+            
+            nav('role-select'); // CHUYỂN TỚI MÀN HÌNH CHỌN VAI TRÒ
+        }
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; background-color: #f0fdf4; -webkit-user-select: none; user-select: none; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #d1fae5; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .option-btn { transition: all 0.2s ease; width: 100%; text-align: left; padding: 1rem; border: 2px solid #e5e7eb; border-radius: 0.75rem; background-color: white; color: #1f2937; font-weight: bold; cursor: pointer; }
+        .option-btn:hover { border-color: #10b981; background-color: #f0fdf4; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .option-selected { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #047857 !important; }
+        .option-selected span.circle-label { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; opacity: 0; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(20px); } }
+        .math-text { font-size: 1.15rem; line-height: 1.7; color: #1f2937; }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen flex items-center justify-center p-4" oncontextmenu="return false;">
+
+    <!-- MÀN HÌNH CẢNH BÁO -->
+    <div id="cheat-warning" class="hidden fixed inset-0 bg-red-900 bg-opacity-95 z-[9999] flex flex-col items-center justify-center p-6 text-white text-center fade-in">
+        <div class="text-6xl text-yellow-400 mb-4 animate-bounce"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h2 class="text-3xl font-black mb-2 text-white">BÀI THI BỊ KHÓA!</h2>
+        <p class="text-lg text-white mb-6">Bạn đã rời khỏi màn hình hoặc thu nhỏ ứng dụng quá 1 giây.<br>Vui lòng báo Giáo viên cung cấp Mã Mở Khóa để làm tiếp.</p>
+        <input type="password" id="inp-unlock" class="text-black p-3 text-center tracking-widest text-2xl font-bold rounded-lg mb-6 w-48 outline-none focus:ring-4 focus:ring-yellow-400" placeholder="******" maxlength="6">
+        <button onclick="unlockRedScreen()" class="bg-yellow-500 hover:bg-yellow-600 text-black font-black px-8 py-3 rounded-lg text-lg shadow-lg transition transform hover:scale-105">MỞ KHÓA BÀI THI</button>
+    </div>
+
+    <!-- WELCOME PAGE -->
+    <div id="page-welcome" class="glass rounded-3xl p-8 max-w-2xl w-full text-center flex flex-col items-center relative fade-in">
+        <p class="text-sm font-bold tracking-widest text-green-600 mb-6 uppercase">Designed by Teacher Pham Minh Vuong</p>
+        <h1 class="text-4xl md:text-5xl font-black mb-3 text-green-800 uppercase">WELCOME</h1>
+        <h2 class="text-2xl md:text-3xl font-bold text-green-600 mb-6 uppercase">TO THE MATHEMATICS EXAM</h2>
+        <div class="w-32 h-1 bg-green-500 rounded-full mb-8"></div>
+        <p class="text-xl italic text-gray-600 mb-8">"Stay calm, be confident, and achieve your best results!"</p>
+        <button onclick="checkExamTime()" class="bg-green-600 text-white text-lg font-bold py-4 px-12 rounded-full transition-all hover:bg-green-700 shadow-lg"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Log In</button>
+    </div>
+
+    <!-- MÀN HÌNH CHỌN VAI TRÒ (MỚI) -->
+    <div id="page-role-select" class="glass rounded-3xl p-8 max-w-md w-full hidden text-center fade-in">
+        <h2 class="text-2xl font-black text-green-700 mb-6 uppercase">Xác nhận quyền truy cập</h2>
+        <div class="flex flex-col gap-4">
+            <button onclick="nav('login-step1')" class="py-4 rounded-xl bg-blue-100 text-blue-800 font-bold border-2 border-blue-300 hover:bg-blue-200 transition text-xl shadow-sm"><i class="fa-solid fa-user-graduate mr-2"></i> HỌC SINH</button>
+            <button onclick="nav('teacher')" class="py-4 rounded-xl bg-orange-100 text-orange-800 font-bold border-2 border-orange-300 hover:bg-orange-200 transition text-xl shadow-sm"><i class="fa-solid fa-chalkboard-user mr-2"></i> GIÁO VIÊN</button>
+        </div>
+        <button onclick="nav('welcome')" class="mt-6 text-sm text-gray-500 font-bold hover:text-gray-700 underline">Quay lại trang chủ</button>
+    </div>
+
+    <!-- MÀN HÌNH QUẢN LÝ CHO GIÁO VIÊN (MỚI) -->
+    <div id="page-teacher" class="glass rounded-3xl p-8 max-w-md w-full hidden text-center fade-in">
+        <div class="text-5xl mb-4 text-orange-600"><i class="fa-solid fa-lock"></i></div>
+        <h2 class="text-2xl font-black text-orange-700 mb-6 uppercase">QUẢN LÝ LỚP THI</h2>
+        <div class="space-y-4 text-left">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Chọn lớp cần khoá/mở khoá:</label>
+                <select id="sel-teacher-class" class="w-full p-3 rounded-lg bg-white border border-gray-300 text-gray-800 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200">
+                    <option value="11D1">11D1</option><option value="11D2">11D2</option>
+                    <option value="11D3">11D3</option><option value="11D4">11D4</option>
+                    <option value="11D5">11D5</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Mã xác thực của Giáo viên:</label>
+                <input type="password" id="inp-teacher-pwd" class="w-full p-3 text-center tracking-widest text-2xl rounded-lg bg-white border border-gray-300 font-bold outline-none focus:border-orange-500" placeholder="******" maxlength="6">
+            </div>
+        </div>
+        <div class="flex gap-4 mt-6">
+            <button onclick="nav('role-select')" class="w-1/3 py-3 rounded-lg border border-gray-300 font-bold hover:bg-gray-100 text-gray-600">Quay lại</button>
+            <button onclick="teacherLockClass(true)" id="btn-lock" class="w-1/3 py-3 rounded-lg bg-red-600 text-white font-bold hover:bg-red-700 shadow-md transition">KHOÁ</button>
+            <button onclick="teacherLockClass(false)" id="btn-unlock" class="w-1/3 py-3 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700 shadow-md transition">MỞ KHOÁ</button>
+        </div>
+    </div>
+
+    <!-- ĐỊNH DANH HỌC SINH -->
+    <div id="page-login-step1" class="glass rounded-3xl p-8 max-w-md w-full hidden fade-in">
+        <h2 class="text-2xl font-black text-center text-green-700 mb-6 uppercase">Định danh học sinh</h2>
+        <div class="space-y-4 text-left">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Lớp</label>
+                <select id="sel-class" onchange="checkStudent()" class="w-full p-3 rounded-lg bg-white border border-gray-300 text-gray-800 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200">
+                    <option value="">-- Chọn Lớp --</option>
+                    <option value="11D1">11D1</option><option value="11D2">11D2</option>
+                    <option value="11D3">11D3</option><option value="11D4">11D4</option>
+                    <option value="11D5">11D5</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Số thứ tự (STT)</label>
+                <input type="number" id="inp-stt" oninput="checkStudent()" class="w-full p-3 rounded-lg bg-white border border-gray-300 text-gray-800 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200" placeholder="Nhập STT...">
+            </div>
+            <div id="student-info" class="hidden p-4 rounded-lg bg-green-50 border border-green-200">
+                <p class="text-sm text-gray-600">Họ và tên: <strong id="lbl-name" class="text-green-700 text-base"></strong></p>
+                <p class="text-sm text-gray-600 mt-1">Ngày sinh: <strong id="lbl-dob" class="text-gray-800"></strong></p>
+            </div>
+            <div class="flex gap-4 mt-6">
+                <button onclick="nav('role-select')" class="flex-1 py-3 rounded-lg border border-gray-300 font-bold hover:bg-gray-100">Quay lại</button>
+                <button id="btn-next-step1" onclick="submitLogin()" class="flex-1 py-3 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700 transition opacity-50 cursor-not-allowed" disabled>TIẾP TỤC</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NHẬP MÃ -->
+    <div id="page-login-step2" class="glass rounded-3xl p-8 max-w-md w-full hidden text-center fade-in">
+        <div class="text-5xl mb-4 text-green-600"><i class="fa-solid fa-shield-halved"></i></div>
+        <p class="text-base text-gray-600 mb-6 font-medium">Nhập mã xác nhận để tải đề. Nếu bạn bị văng trang, nhập lại mã Lớp để làm tiếp.</p>
+        <input type="password" id="inp-code" class="w-full p-3 text-center tracking-widest text-2xl rounded-lg bg-white border border-gray-300 font-bold outline-none focus:border-green-500" placeholder="******" maxlength="6">
+        <p id="code-error" class="text-red-500 text-sm mt-4 hidden font-bold"></p>
+        <div class="flex gap-4 mt-6">
+            <button onclick="nav('login-step1')" class="flex-1 py-3 rounded-lg border font-bold hover:bg-gray-100">Quay lại</button>
+            <button onclick="startExam()" class="flex-1 py-3 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700">XÁC NHẬN</button>
+        </div>
+    </div>
+
+    <!-- GIAO DIỆN LÀM BÀI -->
+    <div id="page-exam" class="w-full max-w-4xl h-[90vh] flex flex-col hidden fade-in">
+        <div class="glass flex justify-between items-center p-4 rounded-xl shadow-md mb-4 border-b-4 border-green-500">
+            <div>
+                <h2 class="font-bold text-green-700 text-lg" id="exam-student-name">...</h2>
+                <p class="text-sm text-gray-500" id="exam-student-class">...</p>
+            </div>
+            <div class="text-right">
+                <div class="text-2xl font-black text-red-600 flex items-center gap-2 justify-end">
+                    <i class="fa-solid fa-stopwatch animate-pulse"></i> <span id="timer">20:00</span>
+                </div>
+                <div class="flex gap-2 justify-end items-center mt-1">
+                    <div class="text-sm font-black bg-gray-200 px-3 py-1 rounded inline-block border border-gray-300 shadow-sm">
+                        <span class="text-green-600">Đ: <span id="cnt-correct">00</span></span> | 
+                        <span class="text-red-500">S: <span id="cnt-wrong">00</span></span> | 
+                        <span class="text-orange-500 font-bold">BQ: <span id="cnt-skip">00</span></span>
+                    </div>
+                    <div class="text-sm font-bold text-gray-700 bg-gray-200 px-3 py-1 rounded inline-block" id="progress-text">Câu 1 / 12</div>
+                </div>
+            </div>
+        </div>
+        <div class="glass flex-1 p-6 md:p-10 rounded-xl shadow-lg overflow-y-auto bg-white" id="question-container"></div>
+        <div class="glass rounded-xl p-4 mt-4 flex justify-between items-center">
+            <p class="text-sm font-bold text-gray-500 hidden md:block">Kỳ thi ĐGTX 1 HKI - Toán 11</p>
+            <div class="flex gap-3 ml-auto">
+                <button id="btn-skip-q" onclick="skipQuestion()" class="py-3 px-6 rounded-lg bg-orange-500 text-white font-bold shadow-lg hover:bg-orange-600 transition">BỎ QUA</button>
+                <button id="btn-submit" onclick="submitExam()" class="hidden py-3 px-8 rounded-lg bg-red-600 text-white font-bold shadow-lg hover:bg-red-700 transition"><i class="fa-solid fa-check-double mr-2"></i> NỘP BÀI</button>
+                <button id="btn-next-q" onclick="nextQuestion()" class="py-3 px-8 rounded-lg bg-green-600 text-white font-bold shadow-lg hover:bg-green-700 transition">TIẾP THEO ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KẾT QUẢ -->
+    <div id="page-result" class="glass rounded-3xl p-8 max-w-2xl w-full text-center hidden mx-auto fade-in">
+        <div class="text-6xl mb-4 text-green-500"><i class="fa-solid fa-medal"></i></div>
+        <h2 class="text-3xl font-black text-gray-800 mb-2 uppercase">KẾT QUẢ BÀI THI</h2>
+        <div class="bg-gray-100 rounded-lg p-5 mb-6 text-left shadow-inner text-sm space-y-2 border border-gray-200">
+            <p class="text-lg"><strong>Họ và tên:</strong> <span id="res-name" class="text-green-700 font-bold"></span></p>
+            <p class="text-base"><strong>Lớp:</strong> <span id="res-class" class="font-bold"></span> | <strong>STT:</strong> <span id="res-stt" class="font-bold"></span></p>
+            <p><strong>Giáo viên:</strong> Phạm Minh Vương</p>
+        </div>
+        <div class="bg-green-50 border-2 border-green-300 rounded-xl p-6 mb-6 shadow-sm">
+            <p class="text-sm font-bold text-gray-500 tracking-widest uppercase">ĐIỂM TỔNG KẾT (THANG 10)</p>
+            <p class="text-6xl font-black text-green-600 my-3" id="res-total">0.00</p>
+            <p class="text-sm text-gray-600 font-bold">Số câu đúng: <span id="res-correct" class="text-lg text-green-700">0</span> / 12</p>
+        </div>
+        <div class="italic text-lg text-green-800 px-4 py-3 bg-green-50 rounded-lg border font-medium text-justify mb-4" id="res-message"></div>
+        
+        <button id="btn-review-exam" onclick="buildReviewUI()" class="hidden w-full bg-blue-600 text-white font-black py-4 rounded-xl hover:bg-blue-700 transition shadow-lg mb-4"><i class="fa-solid fa-eye mr-2"></i> XEM CHI TIẾT BÀI LÀM</button>
+        <p id="msg-review-wait" class="text-sm text-gray-500 mt-2 font-bold animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang chờ tất cả học sinh nộp bài để xem đáp án...</p>
+        
+        <!-- NÚT THI LẠI CỦA GIÁM THỊ -->
+        <div id="retake-container" class="hidden mt-6 w-full pt-4 border-t border-gray-300">
+            <button onclick="document.getElementById('retake-box').classList.toggle('hidden')" class="w-full bg-orange-500 text-white font-black py-4 rounded-xl hover:bg-orange-600 transition shadow-lg"><i class="fa-solid fa-rotate-right mr-2"></i> THI LẠI (DÀNH CHO GIÁO VIÊN)</button>
+            <div id="retake-box" class="hidden mt-4 bg-orange-100 p-5 rounded-xl border border-orange-300 shadow-inner">
+                <p class="text-sm text-orange-800 font-bold mb-3">Nhập mã của Giáo viên để bắt đầu làm lại:</p>
+                <input type="password" id="inp-retake-code" class="w-full p-3 text-center tracking-widest text-2xl rounded-lg border border-orange-300 font-bold outline-none focus:border-orange-500 mb-4" placeholder="****" maxlength="4">
+                <button onclick="processRetake()" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg hover:bg-orange-700 shadow-md">XÁC NHẬN THI LẠI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH XEM CHI TIẾT ĐÁP ÁN -->
+    <div id="page-review" class="w-full max-w-4xl h-[90vh] flex flex-col hidden fade-in mx-auto">
+        <div class="glass flex justify-between items-center p-4 rounded-xl shadow-md mb-4 border-b-4 border-blue-500">
+            <h2 class="font-bold text-blue-700 text-lg uppercase"><i class="fa-solid fa-file-circle-check"></i> ĐÁP ÁN CHI TIẾT</h2>
+            <button onclick="nav('result')" class="bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-lg font-bold text-gray-700 transition">Quay lại</button>
+        </div>
+        <div class="glass flex-1 p-6 md:p-10 rounded-xl shadow-lg overflow-y-auto bg-white space-y-8" id="review-container"></div>
+    </div>
+
+<script>
+const ACCESS_CODES = { "11D1": "3669", "11D2": "9636", "11D3": "3969", "11D4": "9963", "11D5": "6963" };
+
+// DANH SÁCH HỌC SINH 
+const STUDENTS = [
+    {"stt": 1, "class": "11D1", "name": "Nguyễn Trần Bảo An", "dob": "29/06/2009"},
+    {"stt": 2, "class": "11D1", "name": "Nguyễn Huỳnh Phương Anh", "dob": "26/07/2009"},
+    {"stt": 3, "class": "11D1", "name": "Nguyễn Vũ Gia Ân", "dob": "01/11/2009"},
+    {"stt": 4, "class": "11D1", "name": "Nguyễn Hồng Chí Bảo", "dob": "08/10/2009"},
+    {"stt": 5, "class": "11D1", "name": "Lê Văn Công", "dob": "24/08/2009"},
+    {"stt": 6, "class": "11D1", "name": "Nguyễn Ngọc Châu Giang", "dob": "06/03/2009"},
+    {"stt": 7, "class": "11D1", "name": "Hứa Giang Phùng Hảo", "dob": "19/01/2007"},
+    {"stt": 8, "class": "11D1", "name": "Mai Hoàng Gia Hân", "dob": "21/03/2009"},
+    {"stt": 9, "class": "11D1", "name": "Trần Gia Huy", "dob": "04/04/2009"},
+    {"stt": 10, "class": "11D1", "name": "Trần Gia Huy", "dob": "17/07/2009"},
+    {"stt": 11, "class": "11D1", "name": "Huỳnh Quốc Khánh", "dob": "18/02/2009"},
+    {"stt": 12, "class": "11D1", "name": "Lâm Hạo Linh", "dob": "03/04/2008"},
+    {"stt": 13, "class": "11D1", "name": "Võ Huỳnh Khánh Linh", "dob": "15/07/2009"},
+    {"stt": 14, "class": "11D1", "name": "Võ Huỳnh Khánh Ly", "dob": "15/07/2009"},
+    {"stt": 15, "class": "11D1", "name": "Nguyễn Công Minh", "dob": "17/08/2009"},
+    {"stt": 16, "class": "11D1", "name": "Nguyễn Quốc Minh", "dob": "04/10/2009"},
+    {"stt": 17, "class": "11D1", "name": "Đàm Trúc My", "dob": "25/09/2009"},
+    {"stt": 18, "class": "11D1", "name": "Võ Thị Ngọc My", "dob": "21/03/2009"},
+    {"stt": 19, "class": "11D1", "name": "Nguyễn Ngô Hiếu Nghĩa", "dob": "22/10/2009"},
+    {"stt": 20, "class": "11D1", "name": "Trần Kim Ngọc", "dob": "15/03/2009"},
+    {"stt": 21, "class": "11D1", "name": "Nguyễn Thành Nhân", "dob": "10/11/2009"},
+    {"stt": 22, "class": "11D1", "name": "Chế Ngọc Yến Nhi", "dob": "26/12/2009"},
+    {"stt": 23, "class": "11D1", "name": "Nguyễn Thị Hồng Nhung", "dob": "28/11/2008"},
+    {"stt": 24, "class": "11D1", "name": "Bùi Trương Thùy Như", "dob": "20/06/2009"},
+    {"stt": 25, "class": "11D1", "name": "Lê Phan Quang Nhựt", "dob": "09/03/2009"},
+    {"stt": 26, "class": "11D1", "name": "Vũ Minh Phúc", "dob": "09/05/2009"},
+    {"stt": 27, "class": "11D1", "name": "Tạ Thanh Phương", "dob": "17/02/2009"},
+    {"stt": 28, "class": "11D1", "name": "Huỳnh Ái Thiên Quốc", "dob": "21/01/2009"},
+    {"stt": 29, "class": "11D1", "name": "Lê Nguyễn Phương Quỳnh", "dob": "16/05/2009"},
+    {"stt": 30, "class": "11D1", "name": "Trần Như Quỳnh", "dob": "17/06/2009"},
+    {"stt": 31, "class": "11D1", "name": "Đào Trường Sơn", "dob": "16/09/2003"},
+    {"stt": 32, "class": "11D1", "name": "Đỗ Thế Tài", "dob": "09/04/2009"},
+    {"stt": 33, "class": "11D1", "name": "Dương Vũ Minh Thiện", "dob": "16/07/2008"},
+    {"stt": 34, "class": "11D1", "name": "Đoàn Nguyễn Phước Thiện", "dob": "13/01/2008"},
+    {"stt": 35, "class": "11D1", "name": "Phạm Kim Thư", "dob": "03/12/2009"},
+    {"stt": 36, "class": "11D1", "name": "Nguyễn Ngọc Thủy Tiên", "dob": "11/06/2009"},
+    {"stt": 37, "class": "11D1", "name": "Nguyễn Bảo Trân", "dob": "28/04/2009"},
+    {"stt": 38, "class": "11D1", "name": "Đặng Đức Trí", "dob": "22/12/2009"},
+    {"stt": 39, "class": "11D1", "name": "Nguyễn Huỳnh Hiếu Trung", "dob": "19/03/2009"},
+    {"stt": 40, "class": "11D1", "name": "Nguyễn Thị Cẩm Tú", "dob": "08/06/2009"},
+    {"stt": 41, "class": "11D1", "name": "Phạm Hoàng Huy Tuấn", "dob": "01/11/2009"},
+    {"stt": 42, "class": "11D1", "name": "Bùi Quốc Việt", "dob": "01/09/2009"},
+    {"stt": 43, "class": "11D1", "name": "Vũ Ngọc Phương Vy", "dob": "14/01/2009"},
+    {"stt": 44, "class": "11D1", "name": "Vũ Ngọc Tường Vy", "dob": "14/01/2009"},
+    {"stt": 45, "class": "11D1", "name": "Ngô Hoàng Yến", "dob": "04/09/2008"},
+    {"stt": 1, "class": "11D2", "name": "Nguyễn Hoàng Thúy An", "dob": "11/03/2009"},
+    {"stt": 2, "class": "11D2", "name": "Nguyễn Lương Gia Bảo", "dob": "05/07/2009"},
+    {"stt": 3, "class": "11D2", "name": "Phạm Minh Chánh", "dob": "02/08/2004"},
+    {"stt": 4, "class": "11D2", "name": "Phạm Quang Dũng", "dob": "04/05/2009"},
+    {"stt": 5, "class": "11D2", "name": "Lâm Nguyễn Thành Đạt", "dob": "27/12/2009"},
+    {"stt": 6, "class": "11D2", "name": "Võ Thành Đạt", "dob": "22/04/2009"},
+    {"stt": 7, "class": "11D2", "name": "Đặng Thiên Đức", "dob": "04/01/2008"},
+    {"stt": 8, "class": "11D2", "name": "Nguyễn Lê Phúc Đức", "dob": "26/05/2009"},
+    {"stt": 9, "class": "11D2", "name": "Nguyễn Việt Giang", "dob": "01/10/2007"},
+    {"stt": 10, "class": "11D2", "name": "Đoàn Văn Kỳ Hân", "dob": "09/02/2009"},
+    {"stt": 11, "class": "11D2", "name": "Phạm Ngọc Hoa", "dob": "01/10/2009"},
+    {"stt": 12, "class": "11D2", "name": "Vũ Ngọc Hòa", "dob": "20/06/2009"},
+    {"stt": 13, "class": "11D2", "name": "Đặng Thanh Hùng", "dob": "28/07/2009"},
+    {"stt": 14, "class": "11D2", "name": "Nguyễn Phi Hùng", "dob": "29/03/2009"},
+    {"stt": 15, "class": "11D2", "name": "Bùi Huỳnh Bảo Huy", "dob": "07/09/2009"},
+    {"stt": 16, "class": "11D2", "name": "Lê Đức Huy", "dob": "03/03/2009"},
+    {"stt": 17, "class": "11D2", "name": "Phạm Gia Huy", "dob": "01/08/2009"},
+    {"stt": 18, "class": "11D2", "name": "Phan Quốc Huy", "dob": "26/07/2009"},
+    {"stt": 19, "class": "11D2", "name": "Trần Thị Thu Huyền", "dob": "04/06/2008"},
+    {"stt": 20, "class": "11D2", "name": "Võ Thành Long", "dob": "13/08/2008"},
+    {"stt": 21, "class": "11D2", "name": "Đàm Thành Lộc", "dob": "12/12/2009"},
+    {"stt": 22, "class": "11D2", "name": "Vũ Lê Thanh Mai", "dob": "09/10/2008"},
+    {"stt": 23, "class": "11D2", "name": "Trần Nguyễn Thanh Ngọc", "dob": "09/07/2008"},
+    {"stt": 24, "class": "11D2", "name": "Hồ Văn Nhật", "dob": "31/07/2009"},
+    {"stt": 25, "class": "11D2", "name": "Đỗ Thị Khánh Như", "dob": "27/07/2008"},
+    {"stt": 26, "class": "11D2", "name": "Trương Nguyễn Minh Phát", "dob": "27/10/2009"},
+    {"stt": 27, "class": "11D2", "name": "Lê Phi", "dob": "11/02/2009"},
+    {"stt": 28, "class": "11D2", "name": "Võ Lê Quan", "dob": "08/05/2009"},
+    {"stt": 29, "class": "11D2", "name": "Đào Ngọc Quyên", "dob": "25/02/2008"},
+    {"stt": 30, "class": "11D2", "name": "Phạm Hồng Quyên", "dob": "14/07/2009"},
+    {"stt": 31, "class": "11D2", "name": "Phan Thị Thảo Quyên", "dob": "22/03/2009"},
+    {"stt": 32, "class": "11D2", "name": "Trần Thị Ý Quỳnh", "dob": "13/03/2008"},
+    {"stt": 33, "class": "11D2", "name": "Phạm Quốc Thái", "dob": "19/05/2010"},
+    {"stt": 34, "class": "11D2", "name": "Nguyễn Hữu Tiến", "dob": "19/03/2008"},
+    {"stt": 35, "class": "11D2", "name": "Nguyễn Thế Toàn", "dob": "13/10/2009"},
+    {"stt": 36, "class": "11D2", "name": "Phạm Nhật Trường", "dob": "05/12/2009"},
+    {"stt": 37, "class": "11D2", "name": "Dương Ngọc Vững", "dob": "17/01/2009"},
+    {"stt": 38, "class": "11D2", "name": "Nguyễn Bảo Vy", "dob": "16/07/2009"},
+    {"stt": 39, "class": "11D2", "name": "Nguyễn Ngọc Tường Vy", "dob": "13/04/2009"},
+    {"stt": 40, "class": "11D2", "name": "Nguyễn Thị Tường Vy", "dob": "01/09/2009"},
+    {"stt": 1, "class": "11D3", "name": "Đặng Nguyễn Ngọc Anh", "dob": "07/07/2009"},
+    {"stt": 2, "class": "11D3", "name": "Vũ Tất Phương Anh", "dob": "24/10/2010"},
+    {"stt": 3, "class": "11D3", "name": "Nguyễn Ngọc Khả Doanh", "dob": "23/03/2010"},
+    {"stt": 4, "class": "11D3", "name": "Huỳnh Thụy Thùy Duyên", "dob": "28/11/2010"},
+    {"stt": 5, "class": "11D3", "name": "Bùi Thanh Dương", "dob": "14/12/2009"},
+    {"stt": 6, "class": "11D3", "name": "Mạc Tiến Đạt", "dob": "10/08/2009"},
+    {"stt": 7, "class": "11D3", "name": "Mông Ngô Mỹ Đình", "dob": "23/02/2007"},
+    {"stt": 8, "class": "11D3", "name": "Trần Thái Hà", "dob": "30/06/2009"},
+    {"stt": 9, "class": "11D3", "name": "Huỳnh Lê Gia Hân", "dob": "29/05/2009"},
+    {"stt": 10, "class": "11D3", "name": "Trần Mỹ Hân", "dob": "07/12/2010"},
+    {"stt": 11, "class": "11D3", "name": "Đặng Trung Hiếu", "dob": "17/12/2008"},
+    {"stt": 12, "class": "11D3", "name": "Đoàn Phạm Minh Hoàng", "dob": "01/05/2010"},
+    {"stt": 13, "class": "11D3", "name": "Dương Khánh Hưng", "dob": "23/06/2009"},
+    {"stt": 14, "class": "11D3", "name": "Trần Hoàng Huân", "dob": "13/05/2010"},
+    {"stt": 15, "class": "11D3", "name": "Nguyễn Đức Khánh", "dob": "10/02/2009"},
+    {"stt": 16, "class": "11D3", "name": "Lê Nguyễn Đăng Khôi", "dob": "02/10/2010"},
+    {"stt": 17, "class": "11D3", "name": "Nguyễn Vũ Ninh Kiều", "dob": "09/07/2010"},
+    {"stt": 18, "class": "11D3", "name": "Đỗ Ngọc Thư Kỳ", "dob": "29/12/2009"},
+    {"stt": 19, "class": "11D3", "name": "Nguyễn Ngọc Thùy Lâm", "dob": "20/03/2008"},
+    {"stt": 20, "class": "11D3", "name": "Nguyễn Hữu Trần Lê", "dob": "29/05/2009"},
+    {"stt": 21, "class": "11D3", "name": "Nguyễn Thị Tuyết Linh", "dob": "23/09/2009"},
+    {"stt": 22, "class": "11D3", "name": "Nguyễn Thị Tuyết Mai", "dob": "23/09/2009"},
+    {"stt": 23, "class": "11D3", "name": "Nguyễn Gia Minh", "dob": "27/01/2008"},
+    {"stt": 24, "class": "11D3", "name": "Huỳnh Hoàng Bảo Ngọc", "dob": "30/11/2010"},
+    {"stt": 25, "class": "11D3", "name": "Nguyễn Thị Tuyết Ngọc", "dob": "21/11/2009"},
+    {"stt": 26, "class": "11D3", "name": "Nguyễn Võ Bảo Ngọc", "dob": "25/10/2010"},
+    {"stt": 27, "class": "11D3", "name": "Nguyễn Trần Thảo Nguyên", "dob": "07/01/2009"},
+    {"stt": 28, "class": "11D3", "name": "Nguyễn Thị Ánh Nguyệt", "dob": "24/02/2010"},
+    {"stt": 29, "class": "11D3", "name": "Võ Thiện Nhân", "dob": "11/12/2008"},
+    {"stt": 30, "class": "11D3", "name": "Mai Thịnh Phát", "dob": "02/01/2008"},
+    {"stt": 31, "class": "11D3", "name": "Nguyễn Tấn Phong", "dob": "30/12/2010"},
+    {"stt": 32, "class": "11D3", "name": "Nguyễn Hoàng Duy Phúc", "dob": "22/12/2010"},
+    {"stt": 33, "class": "11D3", "name": "Nguyễn Thị Hoài Phương", "dob": "23/09/2009"},
+    {"stt": 34, "class": "11D3", "name": "Phạm Ngọc Sơn", "dob": "21/02/2010"},
+    {"stt": 35, "class": "11D3", "name": "Lê Văn Thành", "dob": "24/12/2009"},
+    {"stt": 36, "class": "11D3", "name": "Nguyễn Đặng Minh Thông", "dob": "11/09/2009"},
+    {"stt": 37, "class": "11D3", "name": "Ngô Minh Thống", "dob": "14/10/2009"},
+    {"stt": 38, "class": "11D3", "name": "Phạm Minh Tiếng", "dob": "19/10/2010"},
+    {"stt": 39, "class": "11D3", "name": "Vũ Ngọc Bảo Trân", "dob": "16/11/2010"},
+    {"stt": 40, "class": "11D3", "name": "Hồ Ngọc Phương Trinh", "dob": "06/04/2009"},
+    {"stt": 41, "class": "11D3", "name": "Phan Quốc Trung", "dob": "27/11/2007"},
+    {"stt": 42, "class": "11D3", "name": "Châu Hoàn Tuấn", "dob": "23/08/2010"},
+    {"stt": 43, "class": "11D3", "name": "Nguyễn Trương Hoàng Tuyết", "dob": "23/08/2009"},
+    {"stt": 44, "class": "11D3", "name": "Dương Triều Vĩ", "dob": "31/03/2008"},
+    {"stt": 45, "class": "11D3", "name": "Nguyễn Thanh Thảo Vy", "dob": "06/10/2009"},
+    {"stt": 1, "class": "11D4", "name": "Nguyễn Như Anh", "dob": "28/05/2008"},
+    {"stt": 2, "class": "11D4", "name": "Bùi Hoàng Bách", "dob": "30/08/2008"},
+    {"stt": 3, "class": "11D4", "name": "Dương Gia Bảo", "dob": "18/08/2008"},
+    {"stt": 4, "class": "11D4", "name": "Huỳnh Trần Gia Bảo", "dob": "20/08/2008"},
+    {"stt": 5, "class": "11D4", "name": "Vũ Nguyên Bảo", "dob": "24/08/2007"},
+    {"stt": 6, "class": "11D4", "name": "Nguyễn Phạm Ngọc Châu", "dob": "01/06/2008"},
+    {"stt": 7, "class": "11D4", "name": "Hoàng Hữu Công", "dob": "14/09/2007"},
+    {"stt": 8, "class": "11D4", "name": "Trương Thị Kim Dung", "dob": "01/01/2008"},
+    {"stt": 9, "class": "11D4", "name": "Đoàn Lê Thành Đạt", "dob": "11/12/2007"},
+    {"stt": 10, "class": "11D4", "name": "Nguyễn Phát Đạt", "dob": "22/08/2008"},
+    {"stt": 11, "class": "11D4", "name": "Nguyễn Thành Đạt", "dob": "15/06/2008"},
+    {"stt": 12, "class": "11D4", "name": "Nguyễn Trần Phát Đạt", "dob": "27/06/2008"},
+    {"stt": 13, "class": "11D4", "name": "Nguyễn Hữu Tấn Giang", "dob": "16/05/2007"},
+    {"stt": 14, "class": "11D4", "name": "Trần Gia Hân", "dob": "19/07/2008"},
+    {"stt": 15, "class": "11D4", "name": "Nguyễn Bảo Huy", "dob": "22/10/2007"},
+    {"stt": 16, "class": "11D4", "name": "Phạm Nguyễn Hoàng Khải", "dob": "09/06/2007"},
+    {"stt": 17, "class": "11D4", "name": "Nguyễn Minh Khang", "dob": "08/11/2008"},
+    {"stt": 18, "class": "11D4", "name": "Trần Duy Khang", "dob": "21/01/2008"},
+    {"stt": 19, "class": "11D4", "name": "Trần Đình Khang", "dob": "30/03/2008"},
+    {"stt": 20, "class": "11D4", "name": "Mai Chánh Minh Khoa", "dob": "11/11/2008"},
+    {"stt": 21, "class": "11D4", "name": "Nguyễn Anh Khoa", "dob": "22/04/2007"},
+    {"stt": 22, "class": "11D4", "name": "Trần Đăng Khoa", "dob": "28/07/2008"},
+    {"stt": 23, "class": "11D4", "name": "Trần Thị Thùy Linh", "dob": "04/03/2008"},
+    {"stt": 24, "class": "11D4", "name": "Nguyễn Nam Minh", "dob": "27/08/2008"},
+    {"stt": 25, "class": "11D4", "name": "Nguyễn Thị Bội Ngọc", "dob": "16/09/2008"},
+    {"stt": 26, "class": "11D4", "name": "Trương Thị Quỳnh Như", "dob": "11/08/2008"},
+    {"stt": 27, "class": "11D4", "name": "Trần Gia Phú", "dob": "19/10/2007"},
+    {"stt": 28, "class": "11D4", "name": "Trương Hoàng Sơn", "dob": "27/03/2008"},
+    {"stt": 29, "class": "11D4", "name": "Trần Ngọc Thiên Thanh", "dob": "18/05/2008"},
+    {"stt": 30, "class": "11D4", "name": "Nguyễn Đình Thắng", "dob": "29/08/2008"},
+    {"stt": 31, "class": "11D4", "name": "Nguyễn Đức Thắng", "dob": "28/02/2008"},
+    {"stt": 32, "class": "11D4", "name": "Nguyễn Đăng Thoại", "dob": "30/04/2007"},
+    {"stt": 33, "class": "11D4", "name": "Lê Vũ Anh Thư", "dob": "13/11/2008"},
+    {"stt": 34, "class": "11D4", "name": "Trần Đỗ Hoài Thương", "dob": "10/10/2008"},
+    {"stt": 35, "class": "11D4", "name": "Nguyễn Lê Đình Toàn", "dob": "12/11/2008"},
+    {"stt": 36, "class": "11D4", "name": "Lê Ngọc Minh Tri", "dob": "18/03/2009"},
+    {"stt": 37, "class": "11D4", "name": "Hà Đức Trí", "dob": "08/10/2008"},
+    {"stt": 38, "class": "11D4", "name": "Nguyễn Văn Trọng", "dob": "04/08/2007"},
+    {"stt": 39, "class": "11D4", "name": "Trần Tuấn Trung", "dob": "12/08/2007"},
+    {"stt": 40, "class": "11D4", "name": "Mai Tuấn Tú", "dob": "24/11/2008"},
+    {"stt": 41, "class": "11D4", "name": "Phạm Huỳnh Anh Tuấn", "dob": "16/11/2008"},
+    {"stt": 42, "class": "11D4", "name": "Phan Thế Vinh", "dob": "09/07/2005"},
+    {"stt": 43, "class": "11D4", "name": "Trương Lê Minh Vinh", "dob": "06/02/2008"},
+    {"stt": 44, "class": "11D4", "name": "Bùi Lan Vy", "dob": "11/07/2008"},
+    {"stt": 45, "class": "11D4", "name": "Nguyễn Thị Tường Vy", "dob": "06/09/2008"},
+    {"stt": 46, "class": "11D4", "name": "Phạm Thị Ngọc Yến", "dob": "06/10/2008"},
+    {"stt": 1, "class": "11D5", "name": "Huỳnh Tuấn An", "dob": "08/11/2009"},
+    {"stt": 2, "class": "11D5", "name": "Nguyễn Hoàng Vân Anh", "dob": "15/08/2009"},
+    {"stt": 3, "class": "11D5", "name": "Nguyễn Việt Anh", "dob": "17/10/2008"},
+    {"stt": 4, "class": "11D5", "name": "Phạm Tuấn Anh", "dob": "19/04/2009"},
+    {"stt": 5, "class": "11D5", "name": "Đỗ Huỳnh Thiên Ân", "dob": "25/07/2008"},
+    {"stt": 6, "class": "11D5", "name": "Nguyễn Thị Kim Ân", "dob": "08/09/2009"},
+    {"stt": 7, "class": "11D5", "name": "Đinh Hoài Bảo", "dob": "11/12/2009"},
+    {"stt": 8, "class": "11D5", "name": "Phan Thanh Tuệ Duy", "dob": "05/02/2009"},
+    {"stt": 9, "class": "11D5", "name": "Phan Hữu Đại", "dob": "23/12/2008"},
+    {"stt": 10, "class": "11D5", "name": "Đỗ Tiến Đạt", "dob": "19/10/2009"},
+    {"stt": 11, "class": "11D5", "name": "Võ Tuấn Đạt", "dob": "07/01/2009"},
+    {"stt": 12, "class": "11D5", "name": "Nguyễn Hải Đăng", "dob": "23/10/2009"},
+    {"stt": 13, "class": "11D5", "name": "Võ Huỳnh Hải Đăng", "dob": "14/10/2008"},
+    {"stt": 14, "class": "11D5", "name": "Lê Trần Thiên Đức", "dob": "18/05/2007"},
+    {"stt": 15, "class": "11D5", "name": "Phạm Thanh Hải", "dob": "10/03/2009"},
+    {"stt": 16, "class": "11D5", "name": "Nguyễn Thị Hân Hân", "dob": "30/10/2004"},
+    {"stt": 17, "class": "11D5", "name": "Nguyễn Lê Hiếu", "dob": "11/06/2008"},
+    {"stt": 18, "class": "11D5", "name": "Đào Gia Huy", "dob": "11/08/2009"},
+    {"stt": 19, "class": "11D5", "name": "Nguyễn Tấn Khang", "dob": "16/10/2007"},
+    {"stt": 20, "class": "11D5", "name": "Lê Văn Thế Kiệt", "dob": "03/10/2008"},
+    {"stt": 21, "class": "11D5", "name": "Nguyễn Phước Lập", "dob": "29/10/2008"},
+    {"stt": 22, "class": "11D5", "name": "Trần Khánh Linh", "dob": "27/05/2009"},
+    {"stt": 23, "class": "11D5", "name": "Nguyễn Hoàng Bảo Long", "dob": "16/07/2008"},
+    {"stt": 24, "class": "11D5", "name": "Đỗ Quốc Luân", "dob": "28/10/2008"},
+    {"stt": 25, "class": "11D5", "name": "Phan Hoàng Phương My", "dob": "01/01/2009"},
+    {"stt": 26, "class": "11D5", "name": "Nguyễn Ngọc Kim Ngân", "dob": "16/05/2009"},
+    {"stt": 27, "class": "11D5", "name": "Nguyễn Doanh Nhân", "dob": "21/10/2007"},
+    {"stt": 28, "class": "11D5", "name": "Nguyễn Phạm Gia Phong", "dob": "01/11/2009"},
+    {"stt": 29, "class": "11D5", "name": "Chiêm Thuận Quý", "dob": "09/10/2009"},
+    {"stt": 30, "class": "11D5", "name": "Nguyễn Thị Ngọc Quyên", "dob": "06/11/2009"},
+    {"stt": 31, "class": "11D5", "name": "Trần Thanh Sơn", "dob": "09/03/2008"},
+    {"stt": 32, "class": "11D5", "name": "Nguyễn Quang Tâm", "dob": "12/09/2009"},
+    {"stt": 33, "class": "11D5", "name": "Thạch Thị Qua Thi", "dob": "01/12/2009"},
+    {"stt": 34, "class": "11D5", "name": "Bùi Anh Thư", "dob": "18/01/2008"},
+    {"stt": 35, "class": "11D5", "name": "Trần Ngọc Anh Thư", "dob": "09/10/2009"},
+    {"stt": 36, "class": "11D5", "name": "Phạm Ngọc Trâm", "dob": "10/03/2009"},
+    {"stt": 37, "class": "11D5", "name": "Tô Đức Bảo Trâm", "dob": "09/09/2009"},
+    {"stt": 38, "class": "11D5", "name": "Nguyễn Thanh Trúc", "dob": "09/02/2009"},
+    {"stt": 39, "class": "11D5", "name": "Nguyễn Trần Quốc Trung", "dob": "14/03/2008"},
+    {"stt": 40, "class": "11D5", "name": "Châu Nhật Huy Trường", "dob": "05/12/2008"},
+    {"stt": 41, "class": "11D5", "name": "Đoàn Phạm Như Ý", "dob": "08/05/2009"}
+];
+
+const bankMCQ = [
+    { text: "Cho hai góc $a$ và $b$ với $\\tan a = \\dfrac{1}{3}$ và $\\tan b = \\dfrac{1}{2}$. Khi đó, $\\tan(a+b)$ bằng:", options: ["$1$.", "$-1$.", "$\\dfrac{5}{7}$.", "$\\dfrac{7}{5}$."], ans: 0, type: "MCQ" },
+    { text: "Tập xác định của hàm số $y = \\tan x$ là:", options: ["$\\mathbb{R} \\setminus \\{k\\pi \\mid k \\in \\mathbb{Z}\\}$.", "$\\mathbb{R} \\setminus \\left\\{ \\dfrac{\\pi}{2} + k\\pi \\mid k \\in \\mathbb{Z} \\right\\}$.", "$\\mathbb{R} \\setminus \\left\\{ \\dfrac{\\pi}{2} + k2\\pi \\mid k \\in \\mathbb{Z} \\right\\}$.", "$\\mathbb{R} \\setminus \\{k2\\pi \\mid k \\in \\mathbb{Z}\\}$."], ans: 1, type: "MCQ" },
+    { text: "Đổi số đo của góc $\\alpha = \\dfrac{3\\pi}{4}$ sang độ ta được kết quả là", options: ["$135^\\circ$.", "$120^\\circ$.", "$150^\\circ$.", "$210^\\circ$."], ans: 0, type: "MCQ" },
+    { text: "Trong không gian, hai đường thẳng được gọi là chéo nhau nếu chúng", options: ["không có điểm chung.", "cắt nhau.", "không đồng phẳng.", "song song với nhau."], ans: 2, type: "MCQ" },
+    { text: "Cho đường tròn có đường kính $12\\text{ cm}$. Độ dài cung tròn có số đo $\\dfrac{\\pi}{3}$ của đường tròn đó là", options: ["$2\\pi\\text{ cm}$.", "$4\\pi\\text{ cm}$.", "$3\\pi\\text{ cm}$.", "$6\\pi\\text{ cm}$."], ans: 0, type: "MCQ" },
+    { text: "Chọn công thức \\textbf{đúng} về giá trị lượng giác của góc nhân đôi trong các công thức sau:", options: ["$\\cos 2a = \\cos^2 a - \\sin^2 a$.", "$\\cos 2a = \\cos^2 a + \\sin^2 a$.", "$\\cos 2a = 1 - 2\\cos^2 a$.", "$\\cos 2a = 2\\sin^2 a + 1$."], ans: 0, type: "MCQ" },
+    { text: "Nếu $\\sin\\alpha = \\dfrac{\\sqrt{2}}{2}$ với $0 < \\alpha < \\dfrac{\\pi}{2}$ thì giá trị của $\\cos\\left(\\alpha + \\dfrac{\\pi}{3}\\right)$ bằng:", options: ["$\\dfrac{\\sqrt{2} - \\sqrt{6}}{4}$.", "$\\dfrac{\\sqrt{6} - \\sqrt{2}}{4}$.", "$\\dfrac{\\sqrt{2} + \\sqrt{6}}{4}$.", "$-\\dfrac{\\sqrt{2} + \\sqrt{6}}{4}$."], ans: 0, type: "MCQ" },
+    { text: "Hàm số nào sau đây là hàm số chẵn?", options: ["$y = \\cos x + 5$.", "$y = \\tan x + \\cot x$.", "$y = \\sin(-x)$.", "$y = \\sin x - \\cos x$."], ans: 0, type: "MCQ" },
+    { text: "Vào chiều thứ Ba, lớp học Toán bắt đầu lúc $14$ giờ $00$ phút. Do đi trễ, đến $14$ giờ $40$ phút bạn Tuấn mới đến lớp. Giả sử kim phút của đồng hồ quay đều, hỏi trong khoảng thời gian từ lúc lớp học bắt đầu đến lúc Tuấn vào lớp, kim phút đã quét được một góc lượng giác có số đo bằng bao nhiêu?", options: ["$-\\dfrac{4\\pi}{3}$.", "$\\dfrac{4\\pi}{3}$.", "$-\\dfrac{2\\pi}{3}$.", "$\\dfrac{2\\pi}{3}$."], ans: 0, type: "MCQ" },
+    { text: "Cho hai đường thẳng phân biệt $a$ và $b$ trong không gian. Nếu $a$ và $b$ cùng thuộc một mặt phẳng thì vị trí tương đối của $a$ và $b$ có thể là", options: ["cắt nhau hoặc chéo nhau.", "chéo nhau hoặc song song.", "song song hoặc cắt nhau.", "trùng nhau hoặc chéo nhau."], ans: 2, type: "MCQ" },
+    { text: "Cho đường tròn có bán kính $R = 3\\text{ cm}$. Độ dài cung tròn có số đo $\\dfrac{5\\pi}{6}$ của đường tròn đó là", options: ["$\\dfrac{5\\pi}{2}\\text{ cm}$.", "$\\dfrac{15\\pi}{2}\\text{ cm}$.", "$\\dfrac{5\\pi}{6}\\text{ cm}$.", "$\\dfrac{5\\pi}{3}\\text{ cm}$."], ans: 0, type: "MCQ" },
+    { text: "Khẳng định nào sau đây là \\textbf{sai}?", options: ["$\\cos(a + b) = \\cos a \\cos b + \\sin a \\sin b$.", "$\\sin(a - b) = \\sin a \\cos b - \\cos a \\sin b$.", "$\\cos(a - b) = \\cos a \\cos b + \\sin a \\sin b$.", "$\\sin(a + b) = \\sin a \\cos b + \\cos a \\sin b$."], ans: 0, type: "MCQ" },
+    { text: "Cho hai góc $a$ và $b$ với $\\tan a = \\dfrac{1}{7}$ và $\\tan b = \\dfrac{3}{4}$. Khi đó, $\\tan(a+b)$ bằng:", options: ["$1$.", "$-\\dfrac{17}{31}$.", "$\\dfrac{17}{31}$.", "$-1$."], ans: 0, type: "MCQ" },
+    { text: "Nếu $\\sin\\alpha = \\dfrac{1}{2}$ thì giá trị của biểu thức $P = (1 - 3\\cos 2\\alpha)(2 + 3\\cos 2\\alpha)$ bằng:", options: ["$-\\dfrac{7}{4}$.", "$\\dfrac{7}{4}$.", "$-\\dfrac{5}{4}$.", "$\\dfrac{5}{4}$."], ans: 0, type: "MCQ" },
+    { text: "Hàm số nào sau đây là hàm số lẻ?", options: ["$y = -2\\cos x$.", "$y = -2\\sin x$.", "$y = \\tan x - \\cos x$.", "$y = -2\\sin x + 2$."], ans: 1, type: "MCQ" },
+    { text: "Cho $\\cos a = -\\dfrac{3}{5}$ với $\\dfrac{\\pi}{2} < a < \\pi$. Tính $\\sin 2a$.", options: ["$-\\dfrac{24}{25}$.", "$\\dfrac{24}{25}$.", "$-\\dfrac{12}{25}$.", "$\\dfrac{12}{25}$."], ans: 0, type: "MCQ" },
+    { text: "Đổi số đo của góc $\\alpha = \\dfrac{5\\pi}{6}$ sang độ ta được kết quả là", options: ["$150^\\circ$.", "$120^\\circ$.", "$135^\\circ$.", "$210^\\circ$."], ans: 0, type: "MCQ" },
+    { text: "Cho $\\cos\\alpha = -\\dfrac{3}{4}$ với $\\dfrac{\\pi}{2} < \\alpha < \\pi$. Khi đó, $\\tan\\alpha$ bằng:", options: ["$-\\dfrac{\\sqrt{7}}{3}$.", "$\\dfrac{\\sqrt{7}}{3}$.", "$-\\dfrac{\\sqrt{7}}{4}$.", "$\\dfrac{\\sqrt{7}}{4}$."], ans: 0, type: "MCQ" },
+    { text: "Tập xác định của hàm số $y = \\cot x$ là:", options: ["$\\mathbb{R} \\setminus \\left\\{ \\dfrac{\\pi}{2} + k\\pi \\mid k \\in \\mathbb{Z} \\right\\}$.", "$\\mathbb{R} \\setminus \\{k\\pi \\mid k \\in \\mathbb{Z}\\}$.", "$\\mathbb{R} \\setminus \\{k2\\pi \\mid k \\in \\mathbb{Z}\\}$.", "$\\mathbb{R} \\setminus \\left\\{ \\dfrac{\\pi}{2} + k2\\pi \\mid k \\in \\mathbb{Z} \\right\\}$."], ans: 1, type: "MCQ" },
+    { text: "Đổi số đo của góc $\\alpha = 150^\\circ$ sang radian ta được kết quả là", options: ["$\\dfrac{5\\pi}{6}$.", "$\\dfrac{5\\pi}{12}$.", "$\\dfrac{7\\pi}{6}$.", "$\\dfrac{2\\pi}{3}$."], ans: 0, type: "MCQ" },
+    { text: "Nếu $\\sin\\alpha = \\dfrac{2}{3}$ thì giá trị của biểu thức $P = (1 - 3\\cos 2\\alpha)(2 + 3\\cos 2\\alpha)$ bằng:", options: ["$\\dfrac{11}{9}$.", "$\\dfrac{12}{9}$.", "$\\dfrac{13}{9}$.", "$\\dfrac{14}{9}$."], ans: 3, type: "MCQ" },
+    { text: "Cho $\\cos a = -\\dfrac{1}{3}$ với $\\dfrac{\\pi}{2} < a < \\pi$. Tính $\\sin 2a$.", options: ["$-\\dfrac{4\\sqrt{2}}{9}$.", "$\\dfrac{4\\sqrt{2}}{9}$.", "$-\\dfrac{2\\sqrt{2}}{9}$.", "$\\dfrac{2\\sqrt{2}}{9}$."], ans: 0, type: "MCQ" },
+    { text: "Cho đường tròn có đường kính $10\\text{ cm}$. Độ dài cung tròn có số đo $\\dfrac{\\pi}{4}$ của đường tròn đó là", options: ["$\\dfrac{5\\pi}{4}\\text{ cm}$.", "$\\dfrac{5\\pi}{2}\\text{ cm}$.", "$\\dfrac{15\\pi}{4}\\text{ cm}$.", "$\\dfrac{5\\pi}{8}\\text{ cm}$."], ans: 0, type: "MCQ" },
+    { text: "Tập xác định của hàm số $y = \\dfrac{1 - \\sin x}{\\cos x}$ là:", options: ["$\\mathbb{R} \\setminus \\left\\{ -\\dfrac{\\pi}{2} + k2\\pi \\mid k \\in \\mathbb{Z} \\right\\}$.", "$\\mathbb{R} \\setminus \\left\\{ \\dfrac{\\pi}{2} + k2\\pi \\mid k \\in \\mathbb{Z} \\right\\}$.", "$\\mathbb{R} \\setminus \\left\\{ \\dfrac{\\pi}{2} + k\\pi \\mid k \\in \\mathbb{Z} \\right\\}$.", "$\\mathbb{R} \\setminus \\{ k\\pi \\mid k \\in \\mathbb{Z} \\}$."], ans: 2, type: "MCQ" },
+    { text: "Cho đường tròn có bán kính $R = 2\\text{ cm}$. Độ dài cung tròn có số đo $\\dfrac{2\\pi}{3}$ của đường tròn đó là", options: ["$\\dfrac{4\\pi}{3}\\text{ cm}$.", "$\\dfrac{2\\pi}{3}\\text{ cm}$.", "$\\dfrac{8\\pi}{3}\\text{ cm}$.", "$\\dfrac{\\pi}{3}\\text{ cm}$."], ans: 0, type: "MCQ" },
+    { text: "Trong không gian, để xác định giao tuyến của hai mặt phẳng phân biệt cắt nhau, cách thường dùng nhất là", options: ["Tìm hai điểm chung phân biệt của hai mặt phẳng đó.", "Tìm một điểm chung và một đường thẳng thuộc mặt phẳng này.", "Tìm ba điểm chung bất kì của hai mặt phẳng đó.", "Tìm hai đường thẳng lần lượt thuộc hai mặt phẳng và chéo nhau."], ans: 0, type: "MCQ" },
+    { text: "Trong các đẳng thức sau, đẳng thức nào \\textbf{đúng} với mọi góc $\\alpha$?", options: ["$\\sin^2 \\alpha + \\cos^2 \\alpha = 1$.", "$1 + \\tan^2 \\alpha = \\dfrac{1}{\\sin^2 \\alpha}$.", "$1 + \\cot^2 \\alpha = \\dfrac{1}{\\cos^2 \\alpha}$.", "$\\tan \\alpha \\cdot \\cot \\alpha = -1$."], ans: 0, type: "MCQ" },
+    { text: "Cho $\\cos\\alpha = -\\dfrac{2}{5}$ với $\\dfrac{\\pi}{2} < \\alpha < \\pi$. Khi đó, $\\tan\\alpha$ bằng:", options: ["$\\dfrac{\\sqrt{21}}{5}$.", "$-\\dfrac{\\sqrt{21}}{2}$.", "$\\dfrac{\\sqrt{21}}{2}$.", "$-\\dfrac{\\sqrt{21}}{5}$."], ans: 1, type: "MCQ" },
+    { text: "Nếu $\\sin\\alpha = \\dfrac{1}{\\sqrt{3}}$ với $0 < \\alpha < \\dfrac{\\pi}{2}$ thì giá trị của $\\cos\\left(\\alpha + \\dfrac{\\pi}{3}\\right)$ bằng:", options: ["$\\dfrac{\\sqrt{6}}{6} - \\dfrac{1}{2}$.", "$\\sqrt{6} - 3$.", "$\\dfrac{\\sqrt{6}}{6} - 3$.", "$\\sqrt{6} - \\dfrac{1}{2}$."], ans: 0, type: "MCQ" },
+    { text: "Đổi số đo của góc $\\alpha = 120^\\circ$ sang radian ta được kết quả là", options: ["$\\dfrac{2\\pi}{3}$.", "$\\dfrac{3\\pi}{2}$.", "$\\dfrac{\\pi}{3}$.", "$\\dfrac{3\\pi}{4}$."], ans: 0, type: "MCQ" }
+];
+
+let currentUser = null, deviceId = "DEV_" + Math.random().toString(36).substr(2, 9);
+let quizData = [], currentIndex = 0, userAnswers = {};
+let confirmedAnswers = {}; 
+let isTestRunning = false, timeLeft = 20 * 60;
+let timerInterval, cheatCheckInterval = null, checkAllTimer = null;
+let attemptCount = 0, leaveCount = 0, blurTimeStart = 0;
+
+let skippedQuestions = [];
+let isReviewingSkipped = false;
+let skipPointer = 0;
+let timeOffset = 0;      // Lưu độ lệch giữa máy học sinh và Server
+let lastCheckTime = 0;   // Dùng để bẫy hack đồng hồ trên máy
+
+// HÀM TẠO ĐỒNG HỒ CHUẨN QUỐC TẾ
+async function syncServerTime() {
+    try {
+        let req = await fetch("https://worldtimeapi.org/api/timezone/Asia/Ho_Chi_Minh");
+        let data = await req.json();
+        timeOffset = new Date(data.datetime).getTime() - Date.now();
+    } catch(e) { timeOffset = 0; } 
+}
+
+// Luôn dùng hàm này thay cho Date.now() để ra giờ thực tế tuyệt đối
+function getRealTime() { return Date.now() + timeOffset; }
+
+function thongBaoHeThong(msg) {
+    let temp = isTestRunning;
+    isTestRunning = false; // Tạm tắt chống gian lận
+    alert(msg);
+    isTestRunning = temp;  // Bật lại sau khi đóng thông báo
+    blurTimeStart = 0;     // Reset lại bộ đếm thời gian blur
+}
+
+/* ====== ANTI-CHEAT THÉP ====== */
+document.addEventListener("keydown", (e) => { 
+    if (e.key === "F12" || (e.ctrlKey && ['u', 'c', 'p', 's'].includes(e.key.toLowerCase()))) { e.preventDefault(); return false; } 
+});
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+
+window.addEventListener('blur', () => {
+    if (!isTestRunning) return;
+    blurTimeStart = Date.now();
+    cheatCheckInterval = setInterval(() => { if ((Date.now() - blurTimeStart) / 1000 > 1) triggerWarningScreen(); }, 1000);
+});
+window.addEventListener('focus', () => {
+    if (!isTestRunning || blurTimeStart === 0) return;
+    clearInterval(cheatCheckInterval);
+    if ((Date.now() - blurTimeStart) / 1000 > 1) triggerWarningScreen();
+    blurTimeStart = 0;
+});
+
+function triggerWarningScreen() {
+    clearInterval(cheatCheckInterval); blurTimeStart = 0; 
+    leaveCount++;
+    if (leaveCount >= 100) { submitExam("Bạn đã rời màn hình nhiều lần. BÀI THI BỊ THU VĨNH VIỄN."); return; }
+    isTestRunning = false;
+    document.getElementById('cheat-warning').classList.remove('hidden'); document.getElementById('cheat-warning').classList.add('flex');
+    autoSaveAPI();
+}
+
+function unlockRedScreen() {
+    const code = document.getElementById('inp-unlock').value;
+    if (code === "356974") {
+        document.getElementById('cheat-warning').classList.add('hidden'); document.getElementById('cheat-warning').classList.remove('flex');
+        document.getElementById('inp-unlock').value = ''; isTestRunning = true; startTimer();
+    } else { alert("Mã khôi phục không đúng!"); }
+}
+
+/* ============================= */
+function nav(id) { 
+    ['welcome','role-select','teacher','login-step1','login-step2','exam','result','review'].forEach(p => {
+        let el = document.getElementById(`page-${p}`);
+        if(el) el.classList.add('hidden');
+    }); 
+    document.getElementById(`page-${id}`).classList.remove('hidden'); 
+}
+
+// CHỨC NĂNG KHOÁ LỚP CỦA GIÁO VIÊN
+async function teacherLockClass(isLock) {
+    const pwd = document.getElementById('inp-teacher-pwd').value;
+    const targetClass = document.getElementById('sel-teacher-class').value;
+    
+    if(pwd !== "313562") {
+        alert("Mã giáo viên không chính xác!");
+        return;
+    }
+    
+    const btnLock = document.getElementById('btn-lock');
+    const btnUnlock = document.getElementById('btn-unlock');
+    btnLock.disabled = true; btnUnlock.disabled = true;
+    
+    let res = await fetchAPI("teacher_action", { targetClass: targetClass, pwd: pwd, lockState: isLock }, true);
+    
+    if (res && res.status === "success") {
+        alert(res.msg);
+    } else if (res && res.error) {
+        alert(res.error);
+    } else {
+        alert("Lỗi kết nối mạng, vui lòng thử lại!");
+    }
+    
+    btnLock.disabled = false; btnUnlock.disabled = false;
+}
+
+function checkStudent() {
+    let cls = document.getElementById('sel-class').value;
+    let stt = parseInt(document.getElementById('inp-stt').value);
+    let st = STUDENTS.find(s => s.class === cls && s.stt === stt);
+    const btn = document.getElementById('btn-next-step1');
+    if (st) {
+        currentUser = st; document.getElementById('lbl-name').innerText = st.name; document.getElementById('lbl-dob').innerText = st.dob;
+        document.getElementById('student-info').classList.remove('hidden'); btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    } else { 
+        currentUser = null; document.getElementById('student-info').classList.add('hidden'); btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); 
+    }
+}
+
+// HỌC SINH ĐĂNG NHẬP
+async function submitLogin() { 
+    const btn = document.getElementById('btn-next-step1');
+    btn.disabled = true; btn.innerText = "ĐANG KIỂM TRA...";
+
+    let res = await fetchAPI("init", {}, true);
+    
+    if (res && res.status === "already_submitted") {
+        nav('result');
+        document.getElementById('res-name').innerText = currentUser.name;
+        document.getElementById('res-class').innerText = currentUser.class;
+        document.getElementById('res-stt').innerText = currentUser.stt;
+        document.getElementById('res-total').innerText = res.score !== undefined ? res.score : "0.00";
+        document.getElementById('res-correct').innerText = res.correct !== undefined ? res.correct : "0";
+
+        let finalScore = parseFloat(res.score || 0);
+        let msg = finalScore < 5 ? "Đừng nản chí, đọc lại lý thuyết và cố gắng hơn nhé!" :
+                  finalScore <= 7.9 ? "Em đã nắm được kiến thức nền tảng rồi đấy! Cẩn thận thêm một chút." :
+                  finalScore <= 9 ? "Tuyệt đỉnh! Tư duy bén và làm bài rất cẩn thận." : "Xuất sắc! Đỉnh nóc, kịch trần! Em chính là 'chiến thần Toán học'!";
+        document.getElementById('res-message').innerText = `"${msg}"`;
+
+        document.getElementById('btn-review-exam').classList.add('hidden');
+        document.getElementById('msg-review-wait').classList.add('hidden');
+        document.getElementById('retake-container').classList.remove('hidden');
+
+        btn.disabled = false; btn.innerText = "TIẾP TỤC";
+        return;
+    } 
+    else if (res && res.status === "error") {
+        alert(res.error); btn.disabled = false; btn.innerText = "TIẾP TỤC"; return;
+    }
+    
+    btn.disabled = false; btn.innerText = "TIẾP TỤC";
+    nav('login-step2'); 
+}
+
+async function processRetake() {
+    const code = document.getElementById('inp-retake-code').value;
+    if (code === "3196") {
+        let res = await fetchAPI("login", { overwrite: true }, true);
+        if(res && res.status === "success") {
+            attemptCount++;
+            document.getElementById('retake-container').classList.add('hidden');
+            
+            // XÓA LỊCH SỬ THỜI GIAN: Giáo viên đồng ý thi lại thì mới được xóa mốc để bắt đầu đếm 20 phút mới!
+            localStorage.removeItem(`exam_end_${currentUser.class}_${currentUser.stt}`);
+            
+            await generateQuizData();
+        } else { alert("Lỗi mạng khi tạo bài thi lại!"); }
+    } else { alert("Mã giáo viên không chính xác!"); }
+}
+
+function mulberry32(a) {
+    return function() {
+      var t = a += 0x6D2B79F5; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+function generateSeed(className, studentNum) {
+    let str = className.trim().toUpperCase() + "_" + studentNum; let hash = 0;
+    for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return hash;
+}
+function shuffleArray(array, randFunc) {
+    let arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(randFunc() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr;
+}
+
+// HỌC SINH NHẬP MÃ THI
+async function startExam() {
+    const code = document.getElementById('inp-code').value;
+    const errorDisplay = document.getElementById('code-error');
+    
+    if (code !== "356974" && ACCESS_CODES[currentUser.class] !== code) { 
+        errorDisplay.innerText = "Mã truy cập không chính xác!"; errorDisplay.classList.remove('hidden'); return; 
+    }
+    
+    errorDisplay.classList.add('hidden'); 
+    let res = await fetchAPI("login", {}, true);
+    
+    if (res && res.status === "error") {
+        alert(res.error); return; 
+    }
+    else if (res && res.status === "already_submitted") {
+        alert("Bạn đã nộp bài! Vui lòng làm mới trang (F5) để xem điểm."); return;
+    } 
+    else if (res && res.isRecover && res.backupData) { 
+        let d = res.backupData;
+        attemptCount = d.attemptCount || attemptCount;
+        userAnswers = d.userAnswers || {};
+        confirmedAnswers = d.confirmedAnswers || {};
+        leaveCount = d.leaveCount || 0;
+        currentIndex = d.currentIndex || 0;
+        skippedQuestions = d.skippedQuestions || [];
+        isReviewingSkipped = d.isReviewingSkipped || false;
+        skipPointer = d.skipPointer || 0;
+        
+        await syncServerTime(); 
+
+        let savedEndTime = localStorage.getItem(`exam_end_${currentUser.class}_${currentUser.stt}`);
+        if (!savedEndTime && d.timeLeft) {
+             localStorage.setItem(`exam_end_${currentUser.class}_${currentUser.stt}`, getRealTime() + d.timeLeft * 1000);
+        }
+
+        await generateQuizData(true); 
+        nav('exam'); 
+        
+        isTestRunning = true; 
+        startTimer(); 
+        loadQuestion(); 
+        updateScoreBoard();
+        
+        thongBaoHeThong("Phát hiện tải lại trang (F5)! Hệ thống ghi nhận 1 lần vi phạm. Thời gian vẫn đang chạy.");
+        triggerWarningScreen();
+        return;
+    }
+    
+    // BẪY F5 SIÊU NHANH TRỘM THỜI GIAN
+    let existingTimer = localStorage.getItem(`exam_end_${currentUser.class}_${currentUser.stt}`);
+    
+    await generateQuizData(); // Khởi tạo bình thường
+    
+    // NẾU CÓ GIỜ LƯU TỪ TRƯỚC -> Đây chính là hành vi F5 tải lại trang nhưng lách qua hệ thống!
+    if (existingTimer) {
+        thongBaoHeThong("Phát hiện tải lại trang (F5) hoặc mất kết nối! Bài thi bị khóa, thời gian VẪN ĐANG TRỪ DẦN.");
+        triggerWarningScreen();
+    }
+}
+
+async function generateQuizData(skipNav = false) { 
+    const randFunc = mulberry32(generateSeed(currentUser.class, currentUser.stt + attemptCount.toString()));
+    let selectedMCQ = shuffleArray(bankMCQ, randFunc).slice(0, 12);
+    selectedMCQ.forEach(q => {
+        let optsWithIndex = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.ans }));
+        optsWithIndex = shuffleArray(optsWithIndex, randFunc); q.options = optsWithIndex.map(o => o.text); q.ans = optsWithIndex.findIndex(o => o.isCorrect);
+    });
+    quizData = [...selectedMCQ];
+
+    if(!skipNav) {
+        document.getElementById('exam-student-name').innerText = `Thí sinh: ${currentUser.name}`;
+        document.getElementById('exam-student-class').innerText = `Lớp: ${currentUser.class} | STT: ${currentUser.stt}`;
+        nav('exam');
+        userAnswers = {}; confirmedAnswers = {}; currentIndex = 0; leaveCount = 0; 
+        skippedQuestions = []; isReviewingSkipped = false; skipPointer = 0;
+        
+        await syncServerTime(); 
+        
+        // BẢO MẬT: Kiểm tra xem học sinh này đã từng lấy giờ chưa. TUYỆT ĐỐI KHÔNG GHI ĐÈ!
+        let savedEndTime = localStorage.getItem(`exam_end_${currentUser.class}_${currentUser.stt}`);
+        if (!savedEndTime) {
+            // Chỉ cấp mốc thời gian mới nếu bộ nhớ trống
+            savedEndTime = getRealTime() + 20 * 60 * 1000;
+            localStorage.setItem(`exam_end_${currentUser.class}_${currentUser.stt}`, savedEndTime);
+        }
+        
+        // Ép đồng hồ tính lại số phút thực tế còn lại từ mốc đã lưu (Học sinh F5 sẽ thấy giờ bị hụt đi)
+        timeLeft = Math.floor((parseInt(savedEndTime) - getRealTime()) / 1000);
+        if(timeLeft < 0) timeLeft = 0;
+
+        isTestRunning = true; startTimer(); loadQuestion(); updateScoreBoard();
+    }
+}
+
+function updateScoreBoard() {
+    let corr = 0, wrg = 0, skip = 0;
+    quizData.forEach((q, i) => {
+        if(confirmedAnswers[i] !== undefined) {
+            if(confirmedAnswers[i] === q.ans) corr++; else wrg++;
+        }
+    });
+    
+    skippedQuestions.forEach(idx => {
+        if (confirmedAnswers[idx] === undefined) skip++;
+    });
+
+    document.getElementById('cnt-correct').innerText = corr.toString().padStart(2, '0');
+    document.getElementById('cnt-wrong').innerText = wrg.toString().padStart(2, '0');
+    
+    let skipEl = document.getElementById('cnt-skip');
+    if (skipEl) skipEl.innerText = skip.toString().padStart(2, '0');
+}
+
+function loadQuestion() {
+    const q = quizData[currentIndex];
+    let progText = isReviewingSkipped ? `Câu làm lại (${skipPointer + 1}/${skippedQuestions.length}) - Gốc: Câu ${currentIndex + 1}` : `Câu ${currentIndex + 1} / 12`;
+    document.getElementById('progress-text').innerText = progText;
+    
+    let html = `<div class="fade-in"><span class="bg-blue-900 text-blue-100 font-bold px-3 py-1 rounded-md text-sm mb-4 inline-block tracking-wider">PHẦN I. TRẮC NGHIỆM</span>
+                <p class="math-text mb-8"><b class="text-green-700 mr-2 text-xl">Câu ${currentIndex + 1}.</b> ${q.text}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+    q.options.forEach((opt, idx) => {
+        let checked = userAnswers[currentIndex] === idx ? 'checked' : '';
+        let selectedClass = checked ? 'option-selected' : '';
+        html += `<div><input type="radio" name="mcq" id="opt${idx}" value="${idx}" class="hidden" ${checked} onchange="saveAnswer(${idx})">
+            <label for="opt${idx}" class="option-btn block rounded-xl shadow-sm ${selectedClass}"><span class="circle-label inline-block w-8 h-8 text-center leading-8 bg-gray-100 rounded-full mr-3 font-bold border border-gray-300">${['A','B','C','D'][idx]}</span> <span class="math-text ml-2">${opt}</span></label></div>`;
+    });
+    document.getElementById('question-container').innerHTML = html + `</div></div>`;
+    if (window.MathJax) { try { MathJax.typesetPromise(); } catch(e) {} }
+    
+    let isTerminal = (isReviewingSkipped && skipPointer === skippedQuestions.length - 1) || (!isReviewingSkipped && currentIndex === 11 && skippedQuestions.length === 0);
+    document.getElementById('btn-next-q').classList.toggle('hidden', isTerminal);
+    document.getElementById('btn-submit').classList.toggle('hidden', !isTerminal);
+    document.getElementById('btn-skip-q').classList.toggle('hidden', isReviewingSkipped);
+}
+
+function saveAnswer(val) { userAnswers[currentIndex] = val; loadQuestion(); autoSaveAPI(); }
+
+function skipQuestion() {
+    if (isReviewingSkipped) return;
+    if (skippedQuestions.length >= 5) { thongBaoHeThong("Bạn chỉ được bỏ qua tối đa 5 câu!"); return; }
+    userAnswers[currentIndex] = undefined;
+    if (!skippedQuestions.includes(currentIndex)) skippedQuestions.push(currentIndex);
+    advanceQuestion();
+}
+
+function nextQuestion() {
+    if (userAnswers[currentIndex] === undefined) { thongBaoHeThong("Vui lòng chọn đáp án hoặc bấm BỎ QUA!"); return; }
+    advanceQuestion();
+}
+
+function advanceQuestion() {
+    if (userAnswers[currentIndex] !== undefined) {
+        confirmedAnswers[currentIndex] = userAnswers[currentIndex];
+    }
+    updateScoreBoard();
+    autoSaveAPI();
+    
+    if (!isReviewingSkipped) {
+        if (currentIndex < 11) { currentIndex++; loadQuestion(); } 
+        else {
+            if (skippedQuestions.length > 0) {
+                isReviewingSkipped = true; skipPointer = 0; currentIndex = skippedQuestions[skipPointer];
+                thongBaoHeThong(`Bạn đã đi hết 12 câu. Hệ thống sẽ tự động quay lại ${skippedQuestions.length} câu đã bỏ qua.`); loadQuestion();
+            } else { submitExam(); }
+        }
+    } else {
+        if (skipPointer < skippedQuestions.length - 1) { skipPointer++; currentIndex = skippedQuestions[skipPointer]; loadQuestion(); } 
+        else { submitExam(); }
+    }
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    lastCheckTime = Date.now(); 
+    
+    timerInterval = setInterval(() => {
+        let now = Date.now();
+        let timeDelta = now - lastCheckTime;
+        
+        if (timeDelta < -2000 || timeDelta > 10000) {
+            thongBaoHeThong("CẢNH BÁO: Phát hiện can thiệp đồng hồ hệ thống! Bài thi bị thu ngay lập tức.");
+            submitExam("Hệ thống thu bài do gian lận thời gian.");
+            return;
+        }
+        lastCheckTime = now;
+
+        let savedEndTime = localStorage.getItem(`exam_end_${currentUser.class}_${currentUser.stt}`);
+        if (savedEndTime) {
+            timeLeft = Math.floor((parseInt(savedEndTime) - getRealTime()) / 1000);
+        } else {
+            timeLeft--;
+        }
+
+        if (timeLeft <= 0) {
+            timeLeft = 0;
+            submitExam("Đã hết 20 phút làm bài! Hệ thống tự động thu bài.");
+            return;
+        }
+
+        let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        let s = (timeLeft % 60).toString().padStart(2, '0');
+        let timerEl = document.getElementById('timer');
+        if (timerEl) {
+            timerEl.innerText = `${m}:${s}`;
+            if (timeLeft <= 60) timerEl.classList.add('text-red-600', 'text-4xl', 'animate-pulse');
+        }
+    }, 1000);
+}
+
+async function fetchAPI(action, extraData = {}, returnJson = false) {
+    if(WEB_APP_URL.includes("URL_GOOGLE_SCRIPT")) return;
+    try {
+        let bodyData = { deviceId, action: action, ...extraData };
+        if (currentUser) {
+            bodyData.stt = currentUser.stt;
+            bodyData.class = currentUser.class;
+            bodyData.name = currentUser.name;
+        }
+        let req = await fetch(WEB_APP_URL, { 
+            method: 'POST', mode: 'cors', headers: {'Content-Type': 'text/plain;charset=utf-8'}, 
+            body: JSON.stringify(bodyData) 
+        });
+        if(returnJson) return await req.json();
+    } catch(e) { return null; }
+}
+
+function autoSaveAPI() {
+    let currentScore = 0; let mappedAnswers = [];
+    quizData.forEach((q, i) => {
+        if (userAnswers[i] === undefined) {
+            mappedAnswers.push(""); 
+        } else if (userAnswers[i] === q.ans) {
+            currentScore++; mappedAnswers.push("Đ");
+        } else { mappedAnswers.push("S"); }
+    });
+    fetchAPI("autosave", { data: { score: ((currentScore / 12) * 10).toFixed(2), mcq: mappedAnswers, currentIndex, userAnswers, confirmedAnswers, timeLeft, leaveCount, attemptCount, skippedQuestions, isReviewingSkipped, skipPointer } });
+}
+
+async function submitExam(reasonStr = "") {
+    if (!reasonStr && userAnswers[currentIndex] === undefined) { thongBaoHeThong("Vui lòng chọn đáp án cho câu cuối cùng trước khi nộp bài!"); return; }
+    isTestRunning = false; clearInterval(timerInterval); clearInterval(cheatCheckInterval);
+    document.getElementById('cheat-warning').classList.add('hidden');
+    
+    if (userAnswers[currentIndex] !== undefined) { confirmedAnswers[currentIndex] = userAnswers[currentIndex]; }
+    updateScoreBoard();
+    
+    let scoreMCQ = 0; let mappedAnswers = [];
+    quizData.forEach((q, i) => {
+        if (userAnswers[i] === undefined) { mappedAnswers.push(""); } 
+        else if (userAnswers[i] === q.ans) { scoreMCQ++; mappedAnswers.push("Đ"); } 
+        else { mappedAnswers.push("S"); }
+    });
+    
+    let finalScore = ((scoreMCQ / 12) * 10).toFixed(2); nav('result');
+    document.getElementById('res-name').innerText = currentUser.name; document.getElementById('res-class').innerText = currentUser.class;
+    document.getElementById('res-stt').innerText = currentUser.stt; document.getElementById('res-total').innerText = finalScore;
+    document.getElementById('res-correct').innerText = scoreMCQ;
+    
+    let msg = finalScore < 5 ? "Đừng nản chí, đọc lại lý thuyết và cố gắng hơn nhé!" :
+              finalScore <= 7.9 ? "Em đã nắm được kiến thức nền tảng rồi đấy! Cẩn thận thêm một chút." :
+              finalScore <= 9 ? "Tuyệt đỉnh! Tư duy bén và làm bài rất cẩn thận." : "Xuất sắc! Đỉnh nóc, kịch trần! Em chính là 'chiến thần Toán học'!";
+    document.getElementById('res-message').innerText = `"${msg}"`;
+    document.getElementById('retake-container').classList.add('hidden');
+    
+    await fetchAPI("submit", { data: { score: finalScore, mcq: mappedAnswers, leaveCount } });
+    if(reasonStr) alert(reasonStr);
+    
+    checkAllTimer = setInterval(async () => {
+        let rs = await fetchAPI("check_all_submitted", {}, true);
+        if (rs && rs.allSubmitted) {
+            clearInterval(checkAllTimer);
+            document.getElementById('msg-review-wait').classList.add('hidden');
+            document.getElementById('btn-review-exam').classList.remove('hidden');
+        }
+    }, 5000); 
+}
+
+function buildReviewUI() {
+    nav('review');
+    let html = "";
+    quizData.forEach((q, i) => {
+        let uAns = userAnswers[i];
+        let isCorrect = uAns === q.ans;
+        html += `<div class="p-5 border-2 rounded-xl ${isCorrect ? 'border-green-400 bg-green-50' : 'border-red-400 bg-red-50'}">
+                    <p class="math-text mb-4 font-black text-gray-800"><span class="text-blue-700">Câu ${i+1}:</span> ${q.text}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
+        q.options.forEach((opt, idx) => {
+            let bgClass = "bg-white border-gray-300 text-gray-700";
+            let iconStr = "";
+            if (idx === q.ans) { 
+                bgClass = "bg-green-200 border-green-600 text-green-900 font-bold shadow-md"; 
+                iconStr = `<i class="fa-solid fa-circle-check text-green-700 text-xl ml-2"></i>`; 
+            } else if (idx === uAns && !isCorrect) { 
+                bgClass = "bg-red-200 border-red-600 text-red-900 font-bold shadow-md"; 
+                iconStr = `<i class="fa-solid fa-circle-xmark text-red-700 text-xl ml-2"></i>`; 
+            }
+            html += `<div class="p-3 border rounded-xl ${bgClass} flex justify-between items-center transition">
+                        <span class="math-text"> ${['A','B','C','D'][idx]}. ${opt}</span>
+                        ${iconStr}
+                    </div>`;
+        });
+        html += `</div></div>`;
+    });
+    document.getElementById('review-container').innerHTML = html;
+    if (window.MathJax) { try { MathJax.typesetPromise(); } catch(e) {} }
+}
+</script>
+</body>
+</html>
